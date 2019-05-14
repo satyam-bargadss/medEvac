@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
-use App\plan
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -13,16 +13,7 @@ use App\plan
 |
 */
 
-/*Route::middleware('auth:api')->get('/user', function (Request $request) {
+Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
-*/
-/*Route::get('plan', function () {
-    return response(Plan::all(),200);
-});
-*/
-Route::get('plan', function() {
-    // If the Content-Type and Accept headers are set to 'application/json', 
-    // this will return a JSON structure. This will be cleaned up later.
-    return Plan::all();
-});
+Route::get('PlanDetail', 'PlanController@index');
