@@ -34,5 +34,6 @@ class CreatePlansTable extends Migration
     public function down()
     {
         Schema::dropIfExists('plans');
+		$table->dropForeign(['planId']);
     }
 }
