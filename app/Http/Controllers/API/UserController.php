@@ -22,15 +22,61 @@ class UserController extends Controller
     }
     
 	
-	 public function login(){ 
-        if(Auth::attempt(['email' => request('email'), 'password' => request('password')])){ 
+	 public function login(Request $request){ 
+       /* if(Auth::attempt(['email' => request('email'), 'password' => request('password')])){ 
             $user = Auth::user(); 
-            $success['token'] =  $user->createToken('MyApp')-> accessToken; 
+            $success['token'] =  $user->generateToken();; 
             return response()->json(['success' => $success], $this-> successStatus); 
         } 
         else{ 
             return response()->json(['error'=>'Unauthorised'], 401); 
         } 
+
+
+        */
+         // Validations
+    $rules = [
+        'email'=>'required|email',
+        'password'=>'required|min:8'
+      ];
+      $validator = Validator::make($request->all(), $rules);
+      if ($validator->fails()) {
+        // Validation failed
+        return response()->json([
+          'message' => $validator->messages(),
+        ]);
+      } else {
+        // Fetch User
+        $user = User::where('email',$request->email)->first();
+        if($user) {
+          // Verify the password
+          if( password_verify($request->password, $user->password) ) {
+            // Update Token
+            $postArray = ['api_token' => User::generateToken()];
+            $login = User::where('email',$request->email)->update($postArray);
+            
+            if($login) {
+              return response()->json([
+                'name'         => $user->name,
+                'email'        => $user->email,
+                'access_token' => $this->api_token,
+              ]);
+            }
+          } else {
+            return response()->json([
+              'message' => 'Invalid Password',
+            ]);
+          }
+        } else {
+          return response()->json([
+            'message' => 'User not found',
+          ]);
+        }
+      }
+    
+    /**
+     * Register
+     */
     }
 	
     /**
@@ -38,9 +84,11 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function register()
     {
-        //
+        $user->generateToken();
+
+        return response()->json(['data' => $user->toArray()], 201);
     }
 
     /**
