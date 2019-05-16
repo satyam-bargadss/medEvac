@@ -46,6 +46,15 @@ return [
             'provider' => 'users',
             'hash' => false,
         ],
+        'agent' => [
+            'driver' => 'token',
+            'provider' => 'agents',
+            'hash' => false,
+        ],
+        'agent-api' => [
+            'driver' => 'token',
+            'provider' => 'admins',
+        ],
     ],
 
     /*
@@ -69,6 +78,11 @@ return [
         'users' => [
             'driver' => 'eloquent',
             'model' => App\User::class,
+        ],
+        
+        'admins'=>[
+            'driver' => 'eloquent',
+            'model' => App\Agent::class,
         ],
 
         // 'users' => [
@@ -98,6 +112,12 @@ return [
             'table' => 'password_resets',
             'expire' => 60,
         ],
+        'agents'=>[
+            'provider' => 'agents',
+            'table' => 'password_resets',
+            'expire' => 60,
+        ]
+
     ],
 
 ];

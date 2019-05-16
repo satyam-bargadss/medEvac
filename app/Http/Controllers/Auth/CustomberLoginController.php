@@ -3,7 +3,7 @@ namespace App\Http\Controllers\Auth;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
-class AdminLoginController extends Controller
+class CustomberLoginController extends Controller
 {
     /*
     |--------------------------------------------------------------------------
@@ -32,7 +32,7 @@ class AdminLoginController extends Controller
      */ 
     public function guard()
     {
-      return auth()->guard('admin');
+      return auth()->guard('customber');
     }
     public function showLoginForm()
     {

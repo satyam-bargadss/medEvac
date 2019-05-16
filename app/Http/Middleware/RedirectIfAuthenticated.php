@@ -17,6 +17,9 @@ class RedirectIfAuthenticated
      */
     public function handle($request, Closure $next, $guard = null)
     {
+        if ($guard == "agent" && Auth::guard($guard)->check()) {
+            return redirect('/agent');
+        }
         if (Auth::guard($guard)->check()) {
             return redirect('/home');
         }
