@@ -45,16 +45,7 @@ return [
             'driver' => 'token',
             'provider' => 'users',
             'hash' => false,
-        ],
-        'agent' => [
-            'driver' => 'token',
-            'provider' => 'agents',
-            'hash' => false,
-        ],
-        'agent-api' => [
-            'driver' => 'token',
-            'provider' => 'admins',
-        ],
+        ]
     ],
 
     /*

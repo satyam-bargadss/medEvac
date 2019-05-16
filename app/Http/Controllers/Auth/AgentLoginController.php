@@ -2,7 +2,10 @@
 namespace App\Http\Controllers\Auth;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Foundation\Auth\AuthenticatesUsers;
+//use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Auth;
+use Route;
+
 class AgentLoginController extends Controller
 {
     /*
@@ -24,7 +27,8 @@ class AgentLoginController extends Controller
     protected $redirectTo = '/agent/home';
     public function __construct()
     {
-      $this->middleware('guest')->except('logout');
+      //$this->middleware('guest')->except('logout');
+      $this->middleware('guest:admin', ['except' => ['logout']]);
     }
     /**
      * @return property guard use for login
