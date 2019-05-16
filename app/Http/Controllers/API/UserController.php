@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\API;
-
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\User; 
@@ -14,8 +14,16 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-	public $successStatus = 200;
-	
+    public $successStatus = 200;
+
+    private $apiToken;
+
+    public function __construct()
+    {
+        // Unique Token
+        $this->apiToken = str_random(60);
+    }
+
     public function index()
     {
         //
@@ -52,14 +60,14 @@ class UserController extends Controller
           // Verify the password
           if( password_verify($request->password, $user->password) ) {
             // Update Token
-            $postArray = ['api_token' => User::generateToken()];
+            $postArray = ['api_token' => $this->apiToken];
             $login = User::where('email',$request->email)->update($postArray);
             
             if($login) {
               return response()->json([
                 'name'         => $user->name,
                 'email'        => $user->email,
-                'access_token' => $this->api_token,
+                'access_token' =>  $this->apiToken,
               ]);
             }
           } else {
@@ -84,11 +92,49 @@ class UserController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function register()
+    public function register(Request $request)
     {
-        $user->generateToken();
-
-        return response()->json(['data' => $user->toArray()], 201);
+        
+       // $user->generateToken();
+    // print_r($_POST);exit;
+       // return response()->json(['data' => $user->toArray()], 201);
+       $rules = [
+        'userName'     => 'required|min:3',
+        'email'    => 'required|unique:users,email',
+        'password' => 'required|min:8',
+        'phone' =>'required|min:10|numeric'
+      ];
+      $validator = Validator::make($request->all(), $rules);
+      if ($validator->fails()) {
+        // Validation failed
+        return response()->json([
+          'message' => $validator->messages(),
+        ]);
+      } else {
+        $postArray = [
+          'userName'      => $request->userName,
+          'email'     => $request->email,
+          'password'  => bcrypt($request->password),
+          'phone'  =>$request->phone,
+          'api_token' => $this->apiToken,
+         
+          'modDate' =>Carbon::now()
+        ];
+        // $user = User::GetInsertId($postArray);
+        $user = User::insert($postArray);
+    
+        if($user) {
+          return response()->json([
+            'name'         => $request->name,
+            'email'        => $request->email,
+            'access_token' => $this->apiToken,
+          ]);
+        } else {
+          return response()->json([
+            'message' => 'Registration failed, please try again.',
+          ]);
+        }
+      }
     }
 
     /**

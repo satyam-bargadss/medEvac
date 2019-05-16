@@ -40,11 +40,12 @@ class User extends Authenticatable
      *method to generating token
      * @var array
      */
-    public function generateToken()
+  /*  public function generateToken()
     {
         $this->api_token = str_random(60);
         $this->save();
 
         return $this->api_token;
     }
+    */
 }
