@@ -6,7 +6,11 @@ use Illuminate\Http\Request;
 
 use App\Service;
 
+use Illuminate\Support\Facades\Auth;
+
 use Carbon\Carbon;
+
+use Illuminate\Support\Facades\Validator;
 
 class ServiceController extends Controller
 {
@@ -25,9 +29,46 @@ class ServiceController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
+        $rules = [
+            'serviceName'     => 'required|min:3',
+            'serviceDesc'    => 'required|max:255',                       
+          ];
+          $validator = Validator::make($request->all(), $rules);
+          if ($validator->fails()) {
+            // Validation failed
+            return response()->json([
+              'message' => $validator->messages(),
+            ]);
+          }
+          else{
+              
+            $postArray = [
+                'serviceName' => $request->serviceName,
+                'serviceDesc' => $request->serviceDesc,
+                'modDate' =>Carbon::now(),
+                'modUser' => 'Abscd',            
+                'created_at'=>Carbon::now(),
+              ];
+              // $user = User::GetInsertId($postArray);
+              $service = Service::insert($postArray);
+             // print_r( $plan);exit;
+               //dd($plan->planId);
+               
+              if($service) {
+                $user = Auth::user();
+               // print_r($user);
+                return response()->json([
+                    'message' => 'Service added sucessfully.',
+                  ]);
+                  
+              } else {
+                return response()->json([
+                  'message' => 'Registration failed, please try again.',
+                ]);
+              }
+            }
     }
 
     /**
@@ -72,8 +113,41 @@ class ServiceController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $rules = [
+            'serviceName'     => 'required|min:3',
+            'serviceDesc'    => 'required|max:255',                       
+          ];
+          $validator = Validator::make($request->all(), $rules);
+          if ($validator->fails()) {
+            // Validation failed
+             return response()->json([
+              'message' => $validator->messages(),
+            ]);
+          }
+          else{
+                   $service = Service::find($id);
+                    $service->serviceName=$request->serviceName;
+                    $service->serviceDesc=$request->serviceDesc;
+                    $service->modDate=Carbon::now();
+                    $service->modUser='adads';
+                    $service->updated_at=Carbon::now();
+                    $service->save();
+
+              
+                    if ( $service->save())
+                    {
+                        return response()->json([
+                            'message' => 'servicee added sucessfully.',
+                        ]);
+                    }
+                    
+                    else {
+                        return response()->json([
+                        'message' => 'Something went wrong please try letter.',
+                        ]);
+                    }
     }
+}
 
     /**
      * Remove the specified resource from storage.

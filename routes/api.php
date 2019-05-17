@@ -16,10 +16,18 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+// for plane 
 Route::get('Plan', 'PlanController@index')->middleware('api');
 Route::post('Plan', 'PlanController@create')->middleware('api');
 Route::delete('Plan/{id}', 'PlanController@destroy')->middleware('api');
 Route::put('Plan/{id}', 'PlanController@update')->middleware('api');
+
+//for service
+Route::get('Service', 'ServiceController@index')->middleware('api');
+Route::post('Service', 'ServiceController@create')->middleware('api');
+Route::delete('Service/{id}', 'ServiceController@destroy')->middleware('api');
+Route::put('Service/{id}', 'ServiceController@update')->middleware('api');
+//for auth
 Route::post('login', 'API\UserController@login');
 Route::post('register', 'API\UserController@register');
 Route::group(['middleware' => 'auth:api'], function(){
