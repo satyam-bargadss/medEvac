@@ -20,6 +20,7 @@ class PlanController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    
     public function index()
     {
        return Plan::all();
@@ -118,6 +119,7 @@ class PlanController extends Controller
      */
     public function update(Request $request, $id)
     {
+        //return $request->all();exit;
         $rules = [
 
             'planName'     => 'required|min:3',
@@ -134,30 +136,30 @@ class PlanController extends Controller
             ]);
           }
           else{
+                   $plan = Plan::find($id);
+                    $plan->planName=$request->planName;
+                    $plan->frequency=$request->frequency;
+                    $plan->fee=$request->fee;
+                    $plan->initiatonFee=$request->initiatonFee;
+                    $plan->monthlyFee=$request->monthlyFee;
+                    $plan->modDate=Carbon::now();
+                    $plan->modUser='adads';
+                    $plan->updated_at=Carbon::now();
+                    $plan->save();
+
               
-            $postArray = [
-                'planName' => $request->planName,
-                'frequency' => $request->frequency,
-                'fee' => $request->fee,
-                'initiatonFee' => $request->initiatonFee,
-                'monthlyFee' => $request->monthlyFee,               
-                'modDate'=>Carbon::now(),
-                'modUser'=>'abc',
-                'created_at'=>Carbon::now()
-              ];
-              // $user = User::GetInsertId($postArray);
-            //  echo $id;exit;
-              $plan = Plan::where('planId',$id)->get();
-                print_r( $plan);exit;
-               //dd($plan->planId);
-              if($plan) {
-                $user = Auth::user();
-                print_r($user);
-              } else {
-                return response()->json([
-                  'message' => 'Registration failed, please try again.',
-                ]);
-              }
+                    if ( $plan->save())
+                    {
+                        return response()->json([
+                            'message' => 'Plane added sucessfully.',
+                        ]);
+                    }
+                    
+                    else {
+                        return response()->json([
+                        'message' => 'Something went wrong please try letter.',
+                        ]);
+                    }
             }
     /*
           $share = Share::find($id);
@@ -178,6 +180,17 @@ class PlanController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $plan = Plan::find($id);
+        $plan->delete();
+        if( $plan->delete() == false ){
+            return response()->json([
+                'message' => 'Plan deleted sucessfully.',
+            ]);
+        }
+        else{
+            return response()->json([
+                'message' => 'Something went wrong please try letter.',
+                ]);
+        }
     }
 }
