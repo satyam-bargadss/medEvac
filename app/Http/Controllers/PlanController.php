@@ -4,7 +4,14 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use Illuminate\Support\Facades\Auth;
+
+
+use Illuminate\Support\Facades\Validator;
+
 use App\Plan;
+
+use Carbon\Carbon;
 
 class PlanController extends Controller
 {
@@ -23,10 +30,51 @@ class PlanController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        //
-    }
+        //return $request->all();exit;
+        $rules = [
+            'planName'     => 'required|min:3',
+            'frequency'    => 'required|max:255',
+            'fee' => 'required|min:8|numeric',
+            'initiatonFee' =>'required|min:10|numeric',
+            'monthlyFee' =>'required|min:10|numeric',
+                      
+          ];
+          $validator = Validator::make($request->all(), $rules);
+          if ($validator->fails()) {
+            // Validation failed
+            return response()->json([
+              'message' => $validator->messages(),
+            ]);
+          }
+          else{
+              
+            $postArray = [
+                'planName' => $request->planName,
+                'frequency' => $request->frequency,
+                'fee' => $request->fee,
+                'initiatonFee' => $request->initiatonFee,
+                'monthlyFee' => $request->monthlyFee,               
+                'modDate'=>Carbon::now(),
+                'modUser'=>'abc',
+                'created_at'=>Carbon::now()
+              ];
+              // $user = User::GetInsertId($postArray);
+              $plan = Plan::insert($postArray);
+             // print_r( $plan);exit;
+               //dd($plan->planId);
+              if($plan) {
+                $user = Auth::user();
+                print_r($user);
+              } else {
+                return response()->json([
+                  'message' => 'Registration failed, please try again.',
+                ]);
+              }
+            }
+
+          }
 
     /**
      * Store a newly created resource in storage.
@@ -70,7 +118,56 @@ class PlanController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $rules = [
+
+            'planName'     => 'required|min:3',
+            'frequency'    => 'required|max:255',
+            'fee' => 'required|min:8|numeric',
+            'initiatonFee' =>'required|min:10|numeric',
+            'monthlyFee' =>'required|min:10|numeric',                     
+          ];
+          $validator = Validator::make($request->all(), $rules);
+          if ($validator->fails()) {
+            // Validation failed
+             return response()->json([
+              'message' => $validator->messages(),
+            ]);
+          }
+          else{
+              
+            $postArray = [
+                'planName' => $request->planName,
+                'frequency' => $request->frequency,
+                'fee' => $request->fee,
+                'initiatonFee' => $request->initiatonFee,
+                'monthlyFee' => $request->monthlyFee,               
+                'modDate'=>Carbon::now(),
+                'modUser'=>'abc',
+                'created_at'=>Carbon::now()
+              ];
+              // $user = User::GetInsertId($postArray);
+            //  echo $id;exit;
+              $plan = Plan::where('planId',$id)->get();
+                print_r( $plan);exit;
+               //dd($plan->planId);
+              if($plan) {
+                $user = Auth::user();
+                print_r($user);
+              } else {
+                return response()->json([
+                  'message' => 'Registration failed, please try again.',
+                ]);
+              }
+            }
+    /*
+          $share = Share::find($id);
+          $share->share_name = $request->get('share_name');
+          $share->share_price = $request->get('share_price');
+          $share->share_qty = $request->get('share_qty');
+          $share->save();
+    
+          return redirect('/shares')->with('success', 'Stock has been updated');
+     */
     }
 
     /**

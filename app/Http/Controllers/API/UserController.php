@@ -31,18 +31,7 @@ class UserController extends Controller
     
 	
 	 public function login(Request $request){ 
-       /* if(Auth::attempt(['email' => request('email'), 'password' => request('password')])){ 
-            $user = Auth::user(); 
-            $success['token'] =  $user->generateToken();; 
-            return response()->json(['success' => $success], $this-> successStatus); 
-        } 
-        else{ 
-            return response()->json(['error'=>'Unauthorised'], 401); 
-        } 
-
-
-        */
-         // Validations
+    
     $rules = [
         'email'=>'required|email',
         'password'=>'required|min:8'
