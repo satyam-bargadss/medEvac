@@ -1,14 +1,13 @@
 <?php
 
 namespace App\Http\Controllers\API;
-use Carbon\Carbon;
+
+use App\customer; 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Agent; 
-//use Illuminate\Support\Facades\Auth; 
 use Validator;
-
-class AgentController extends Controller
+use Carbon\Carbon;
+class CustomberController extends Controller
 {
     public $successStatus = 200;
 
@@ -45,10 +44,10 @@ class AgentController extends Controller
          ]);
        } else {
          // Fetch agent
-         $agent = Agent::where('email',$request->email)->first();
-         if($agent) {
+         $customer = customer::where('email',$request->email)->first();
+         if($customer) {
            // Verify the password
-           if( password_verify($request->password, $agent->password) ) {
+           if( password_verify($request->password, $customer->password) ) {
              // Update Token
              $postArray = ['api_token' => $this->apiToken];
              $login = Agent::where('email',$request->email)->update($postArray);
@@ -89,13 +88,14 @@ class AgentController extends Controller
      // print_r($_POST);exit;
         // return response()->json(['data' => $agent->toArray()], 201);
         $rules = [
-         'agentName'     => 'required|min:3|regex:/^[a-zA-Z]+$/u',
+         'firstName'     => 'required|min:3|regex:/^[a-zA-Z]+$/u',
+         'LastName'     => 'required|min:3|regex:/^[a-zA-Z]+$/u',
          'email'    => 'required|unique:agents,email|max:160',
-         'password' => 'required|min:8',
-         'city' =>'required|max:40|regex:/^[a-zA-Z]+$/u',
-         'agentStartDate' =>'required',
-         'address1' =>'required|max:100',
+         'DOB' => 'required|date',
+         'city' =>'required|max:50|regex:/^[a-zA-Z]+$/u',
+         'address1' =>'required|max:40',
          'country' =>'required|max:50|regex:/^[a-zA-Z]+$/u',
+        
          'location' =>'required|max:150|regex:/^[a-zA-Z]+$/u',
          'cellPhone' =>'required|min:10|numeric',
          'zip' =>'required|numeric',
@@ -108,33 +108,28 @@ class AgentController extends Controller
          ]);
        } else {
          $postArray = [
-           'agentName'      => $request->agentName,
+           'firstName'      => $request->agentName,
+           'LastName'      => $request->agentName,
            'email'      => $request->email,
-           'password'      => bcrypt($request->password),
+           'DOB'      => bcrypt($request->password),
            'city'      => $request->city,
-           'email'     => $request->email,
            'address1'  => $request->address1,
-           'address2'  =>$request->address2,
            'country'  =>$request->country,
            'location'  =>$request->location,
            'zip'  =>$request->zip,
            'cellPhone'  =>$request->cellPhone,
-           'groupId'  =>$request->groupId,
-           'agentStartDate'  =>$request->agentStartDate,
-           'userName'  =>$request->userName,
-           'isActive'  =>'0',
            'api_token' => $this->apiToken,
             'created_at' =>Carbon::now(),
            'modDate' =>Carbon::now(),
            'modBy' =>'asddaf',
          ];
          // $agent = agent::GetInsertId($postArray);
-         $agent = agent::insert($postArray);
+         $customer = customer::insert($postArray);
      
-         if($agent) {
+         if($customer) {
            return response()->json([
-             'agentId' =>  $request->agentId,
-             'name'         => $request->agentName,
+             'firstName' =>  $request->agentId,
+             'LastName'         => $request->agentName,
              'email'        => $request->email,
              'access_token' => $this->apiToken,
            ]);
