@@ -17,7 +17,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 // for plane 
-Route::get('Plan', 'PlanController@index')->middleware('api');
+Route::get('Plan', 'PlanController@index')->middleware('api_auth');
 Route::post('Plan', 'PlanController@create')->middleware('api');
 Route::delete('Plan/{id}', 'PlanController@destroy')->middleware('api');
 Route::put('Plan/{id}', 'PlanController@update')->middleware('api');

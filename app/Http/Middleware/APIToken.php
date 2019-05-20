@@ -2,8 +2,9 @@
 
 namespace App\Http\Middleware;
 
+use Illuminate\Http\Request;
 use Closure;
-
+use App\User;
 class APIToken
 {
     /**
@@ -15,12 +16,27 @@ class APIToken
      */
     public function handle($request, Closure $next)
     {
-		 if($request->header('Authorization')){
-         return $next($request);
+        
+    
+     $user = User::where('api_token', $request->header('Authorization'))->first();
+     if($user->email != '' )
+
+      {
+        /*commented section use letter for checking API KEY
+    
+           $apikey = env('API_KEY');
+              //echo  $apikey;exit;
+		 if($request->header('Authorization') == $apikey){
+       
         }
-           return response()->json([
-       'message' => 'Not a valid API request.',
-         ]);
+
+        */
         return $next($request);
+      }
+         
+           return response()->json([
+       'message' => 'Not a valid USER request.',
+         ]);exit;
+       // return $next($request);
     }
 }

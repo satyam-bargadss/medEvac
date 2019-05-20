@@ -45,6 +45,11 @@ return [
             'driver' => 'token',
             'provider' => 'users',
             'hash' => false,
+        ],
+        'agent-api' => [
+            'driver' => 'token',
+            'provider' => 'agents',
+            'hash' => false,
         ]
     ],
 
@@ -71,7 +76,7 @@ return [
             'model' => App\User::class,
         ],
         
-        'admins'=>[
+        'agents'=>[
             'driver' => 'eloquent',
             'model' => App\Agent::class,
         ],

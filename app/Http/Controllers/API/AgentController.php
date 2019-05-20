@@ -17,7 +17,7 @@ class AgentController extends Controller
     public function __construct()
     {
         // Unique Token
-        $this->middleware('auth:admin');
+        //$this->middleware('auth:agent');
         $this->apiToken = str_random(60);
     }
     public function login(Request $request){ 
@@ -89,10 +89,16 @@ class AgentController extends Controller
      // print_r($_POST);exit;
         // return response()->json(['data' => $agent->toArray()], 201);
         $rules = [
-         'agentName'     => 'required|min:3',
-         'email'    => 'required|unique:agents,email',
+         'agentName'     => 'required|min:3|regex:/^[a-zA-Z]+$/u',
+         'email'    => 'required|unique:agents,email|max160',
          'password' => 'required|min:8',
-         'phone' =>'required|min:10|numeric'
+         'city' =>'required|min:40|regex:/^[a-zA-Z]+$/u',
+         'agentStartDate' =>'required|min:40|regex:/^[a-zA-Z]+$/u',
+         'address1' =>'required|min:10',
+         'country' =>'required|min:50|regex:/^[a-zA-Z]+$/u',
+         'Location' =>'required|min:150|regex:/^[a-zA-Z]+$/u',
+         'cellPhone' =>'required|min:10|numeric|max:15',
+         'zip' =>'required|max:10|numeric',
        ];
        $validator = Validator::make($request->all(), $rules);
        if ($validator->fails()) {
@@ -103,11 +109,23 @@ class AgentController extends Controller
        } else {
          $postArray = [
            'agentName'      => $request->agentName,
+           'email'      => $request->email,
+           'password'      => $request->password,
+           'city'      => $request->city,
            'email'     => $request->email,
-           'password'  => bcrypt($request->password),
-           'phone'  =>$request->phone,
+           'address1'  => bcrypt($request->password),
+           'address2'  =>$request->phone,
+           'country'  =>$request->phone,
+           'location'  =>$request->phone,
+           'zip'  =>$request->phone,
+           'cellPhone'  =>$request->phone,
+           'groupId'  =>$request->phone,
+           'agentStartDate'  =>$request->phone,
+           'userName'  =>$request->phone,
+           'password'  =>$request->phone,
+           'isActive'  =>'0',
            'api_token' => $this->apiToken,
-          
+            'created_at' =>Carbon::now(),
            'modDate' =>Carbon::now()
          ];
          // $agent = agent::GetInsertId($postArray);
@@ -115,6 +133,7 @@ class AgentController extends Controller
      
          if($agent) {
            return response()->json([
+             'agentId' =>  $request->agentId,
              'name'         => $request->name,
              'email'        => $request->email,
              'access_token' => $this->apiToken,
