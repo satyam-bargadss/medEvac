@@ -15,7 +15,9 @@ class UserController extends Controller
      * @return \Illuminate\Http\Response
      */
     public $successStatus = 200;
-
+    public $failureStatus = 401;
+	//203 Non-Authoritative Information
+	public $nonAuthoritative = 203;
     private $apiToken;
 
     public function __construct()
@@ -31,7 +33,11 @@ class UserController extends Controller
     
 	
 	 public function login(Request $request){ 
-    
+         //print_r( $request->all());exit;
+		// echo $request->email;
+		 //echo "hellow";exit;
+		//echo json_encode(array('message'=>'hi'));exit;
+        //echo json_encode(array($request->all));exit;
     $rules = [
         'email'=>'required|email',
         'password'=>'required|min:8'
@@ -41,6 +47,7 @@ class UserController extends Controller
         // Validation failed
         return response()->json([
           'message' => $validator->messages(),
+		  'status' =>$this->nonAuthoritative,
         ]);
       } else {
         // Fetch User
@@ -57,16 +64,20 @@ class UserController extends Controller
                 'name'         => $user->name,
                 'email'        => $user->email,
                 'access_token' =>  $this->apiToken,
+				'status' => $this->successStatus,
               ]);
             }
           } else {
             return response()->json([
               'message' => 'Invalid Password',
+			  'status' => $this->failureStatus,
             ]);
           }
         } else {
           return response()->json([
             'message' => 'User not found',
+			'status' => $this->failureStatus,
+			
           ]);
         }
       }

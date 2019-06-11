@@ -43,7 +43,8 @@ class CreateCustomersTable extends Migration
 			$table->string('dependent4FirstName');
 			$table->string('dependent4LastName');
 			$table->date('dependent4DOB');
-			$table->unsignedBigInteger('planId');
+			
+			
 			$table->unsignedBigInteger('agentId')->index();
 			$table->string('userName')->unique();
 			$table->string('password');

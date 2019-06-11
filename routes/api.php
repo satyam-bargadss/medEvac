@@ -1,6 +1,10 @@
 <?php
-
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: GET, PUT, POST, DELETE, OPTIONS');
+header('Access-Control-Allow-Headers: Content-Type, Content-Range, Content-Disposition, Content-Description');
 use Illuminate\Http\Request;
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -33,4 +37,4 @@ Route::post('register', 'API\UserController@register');
 Route::post('details', 'API\UserController@details');
 Route::post('agent-login', 'API\AgentController@login');
 Route::post('agent-register', 'API\AgentController@register');
-Route::post('Customber', 'API\CustomberController@register');
+Route::post('customber', 'API\CustomberController@register_basic1');

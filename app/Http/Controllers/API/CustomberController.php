@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\API;
 
 use App\customer; 
+use App\plan;
+use App\group;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Validator;
@@ -81,13 +83,13 @@ class CustomberController extends Controller
       *
       * @return \Illuminate\Http\Response
       */
-     public function register(Request $request)
+     public function register_basic1(Request $request)
      {
       //print_r($request->all());exit;
         // $agent->generateToken();
      // print_r($_POST);exit;
         // return response()->json(['data' => $agent->toArray()], 201);
-        $rules = [
+        /*$rules = [
          'firstName'     => 'required|min:3|regex:/^[a-zA-Z]+$/u',
          'LastName'     => 'required|min:3|regex:/^[a-zA-Z]+$/u',
          'email'    => 'required|unique:agents,email|max:160',
@@ -107,38 +109,74 @@ class CustomberController extends Controller
            'message' => $validator->messages(),
          ]);
        } else {
-         $postArray = [
-           'firstName'      => $request->agentName,
-           'LastName'      => $request->agentName,
-           'email'      => $request->email,
-           'DOB'      => bcrypt($request->password),
+		   */
+		   $postPlan = [
+		     'planName'      => $request->plan,
+			  'fee' =>'100',
+			  'created_at' =>Carbon::now(),
+		   ];
+		     $plan = plan::insert($postPlan);
+		     $postGroup = [
+		     'groupCode'      => $request->planid,
+			
+			  'created_at' =>Carbon::now(),
+		   ];
+		    $group = group::insert($postGroup);
+         $postCustomber = [
+           'firstName'      => $request->firstname,
+           'LastName'      => $request->lastname,
+           
            'city'      => $request->city,
-           'address1'  => $request->address1,
-           'country'  =>$request->country,
-           'location'  =>$request->location,
+		   'city1'      => $request->city1,
+		   'state1'      => $request->city,
+		   'zip1'      => $request->city,
+		   'agent_manager'      => $request->city,
+		   'spouseFirstName'      => $request->city,
+		 
+		   'password'      => $request->city,
+		   'companyName'      => $request->companyname,
+		   
+		   'country'      => $request->country,
+		   'writing_agent'      => $request->city,
+		   'writing_agent'      => $request->city,
+		    'country'  =>$request->country,
            'zip'  =>$request->zip,
-           'cellPhone'  =>$request->cellPhone,
-           'api_token' => $this->apiToken,
+		   'cellPhone'  =>$request->mobilenumber,
+           'address1'  => $request->address1,
+		   'address2'  => $request->address1,
+		   'mailing_address1'  => $request->address1,
+		   'mailing_address2'  => $request->address1,
+		   'companyName' => $request->companyName,		  
+		   'dependent1FirstName' =>$request->customerRegisterFormDependantFirstName,
+		   'dependent2FirstName' =>$request->customerRegisterFormDependantFirstName1,
+		   'dependent3FirstName' =>$request->customerRegisterFormDependantFirstName2,
+		   'dependent4FirstName' =>$request->customerRegisterFormDependantFirstName3,
+		   'dependent1LastName' =>$request->customerRegisterFormDependantLastName,		   
+		   'Dependent2LastName' =>$request->customerRegisterFormDependantLastName1,		  
+		   'dependent3LastName' =>$request->customerRegisterFormDependantLastName2,		  
+		   'dependent4LastName' =>$request->customerRegisterFormDependantLastName3,	    
+			'dependent1DOB' =>$request->customerRegisterFormDob,
+			'dependent2DOB' =>$request->customerRegisterFormDob1,
+			'dependent3DOB' =>$request->customerRegisterFormDob2,
+			'dependent4DOB' =>$request->customerRegisterFormDob3,          
+		    'spouseFirstName'  =>$request->spousename,
             'created_at' =>Carbon::now(),
-           'modDate' =>Carbon::now(),
+           'modDate' =>"2019-06-14",
            'modBy' =>'asddaf',
          ];
          // $agent = agent::GetInsertId($postArray);
-         $customer = customer::insert($postArray);
+         $customer = customer::insert($postCustomber);
      
          if($customer) {
            return response()->json([
-             'firstName' =>  $request->agentId,
-             'LastName'         => $request->agentName,
-             'email'        => $request->email,
-             'access_token' => $this->apiToken,
+              'status'=>'200'
+			  
            ]);
          } else {
            return response()->json([
              'message' => 'Registration failed, please try again.',
            ]);
-         }
-       }
+         }     
      }
  
      /**
