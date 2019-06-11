@@ -1,11 +1,10 @@
-
 <?php
 
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateCustomerReceiptsTable extends Migration
+class AddName extends Migration
 {
     /**
      * Run the migrations.
@@ -14,9 +13,8 @@ class CreateCustomerReceiptsTable extends Migration
      */
     public function up()
     {
-        Schema::create('customer_receipts', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->timestamps();
+        Schema::table('users', function (Blueprint $table) {
+            $table->string('name',150)->nullable();
         });
     }
 
@@ -27,6 +25,8 @@ class CreateCustomerReceiptsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('customer_receipts');
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColomn('name');
+        });
     }
 }
