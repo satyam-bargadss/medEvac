@@ -38,3 +38,4 @@ Route::post('details', 'API\UserController@details');
 Route::post('agent-login', 'API\AgentController@login');
 Route::post('agent-register', 'API\AgentController@register');
 Route::post('customber', 'API\CustomberController@register_basic1');
+Route::get('customber', 'API\CustomberController@index');

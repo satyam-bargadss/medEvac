@@ -21,6 +21,10 @@ class CustomberController extends Controller
         //$this->middleware('auth:agent');
         $this->apiToken = str_random(60);
     }
+	public function index()
+    {
+       return  customer::all();
+    }
     public function login(Request $request){ 
         /* if(Auth::attempt(['email' => request('email'), 'password' => request('password')])){ 
              $agent = Auth::agent(); 
@@ -169,11 +173,13 @@ class CustomberController extends Controller
      
          if($customer) {
            return response()->json([
-              'status'=>'200'
+              'status'=>'200',
+			  'message'=>'sucess'
 			  
            ]);
          } else {
            return response()->json([
+		     'status'=>'201',
              'message' => 'Registration failed, please try again.',
            ]);
          }     
