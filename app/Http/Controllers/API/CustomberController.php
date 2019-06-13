@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Validator;
 use Carbon\Carbon;
+use DB;
 class CustomberController extends Controller
 {
     public $successStatus = 200;
@@ -23,7 +24,11 @@ class CustomberController extends Controller
     }
 	public function index()
     {
-       return  customer::all();
+      $customers = DB::table('customers')->select('customerId','firstName','LastName','DOB',
+      'country','created_at')->get();
+      return response()->json([
+        'customers' =>$customers,
+      ]);
     }
     public function login(Request $request){ 
         /* if(Auth::attempt(['email' => request('email'), 'password' => request('password')])){ 
