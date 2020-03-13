@@ -63,6 +63,7 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         //custom middleware for api authonication
         'api_auth' => \App\Http\Middleware\APIToken::class,
+		 'cors' => \App\Http\Middleware\Cors::class,
     ];
 
     /**

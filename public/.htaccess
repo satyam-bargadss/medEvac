@@ -19,3 +19,6 @@
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ index.php [L]
 </IfModule>
+RewriteEngine On 
+RewriteCond %{SERVER_PORT} 8000 
+RewriteRule ^(.*)$ https://35.235.80.37/$1 [R,L]

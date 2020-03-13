@@ -1,0 +1,13 @@
+Dear Sir,
+
+there is requirement for the mail services, either we can use our own mail server or we can use the third party mail service provider.
+
+As we are going to use multiple compain (SalesBSS, MadiraaPOS and others may comming soon) that may gerenerate auto mail notification that inlclude Shopping /Password Reset / Promotional / Newslatter/ OTP notification  by the system and that may have the same time stamp.
+
+Multiplr mil with the same time stamp mark as spam/junk mail.
+
+
+the Mail Exchaage server uses these time stamp and DNS-based block list information/database that causes the mail comes on the SPAM/JUNK folder or may not delever the mail to the clint inbox.
+
+
+And the 

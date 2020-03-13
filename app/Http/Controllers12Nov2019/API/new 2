@@ -1,0 +1,70 @@
+select `atp`.`AgentId` AS `agentId`, concat(`c`.`firstName`,' ',`c`.`LastName`) AS `customerName`,
+`c`.`clientType` AS `client_type`,`p`.`planName` AS `membership_plan`,`atp`.`feeAmount` AS `fees`,
+`g`.`groupCode` AS `groupCode`,
+format((case when (`atp`.`chargeBackCommision` <> 0) then `atp`.`Commission` else `atp`.`Commission` end),2) AS `agent_commision`,
+format((case when (`atp`.`ChargeBackInterest` <> 0) then `atp`.`ChargeBackInterest` else 0 end),2) AS `agent_interest`,
+
+(case when (`atp`.`newOrRenew` = 0) then 0 else `atp`.`Commission` end) AS `renewal_commision`,
+
+format((case when (`atp`.`managerCommission` <> 0) then 0 else 0 end),2) AS `manager_Commision`,
+
+format((case when (`atp`.`ChargeBackInterestForManager` <> 0) then 0 else 0 end),2) AS `manager_interest`,
+
+format((case when (`atp`.`stateManagerCommission` <> 0) then 0 else 0 end),2) AS `state_manager_commission`,
+format((case when (`atp`.`ChargeBackInterestForStateManager` <> 0) then 0 else 0 end),2) AS `state_manager_interest`,
+
+
+format((case when (`atp`.`chargeBackCommision` <> 0) then (case when (`atp`.`ChargeBackInterest` <> 0) then (`atp`.`chargeBackCommision` - `atp`.`ChargeBackInterest`) else `atp`.`chargeBackCommision` end) else `atp`.`Commission` end),2) AS `earned_commission` 
+from (
+(
+  (`agentpayment` `atp` 
+   left join `customers` `c` on((`atp`.`customerId` = `c`.`customerId`))) 
+   left join `plans` `p` on((`p`.`planId` = `atp`.`planId`))) 
+   left join `groups` `g` on((`g`.`groupId` = `c`.`groupId`))
+   )
+
+union all 
+
+select `atp`.`managerId` AS `managerId`,concat(`c`.`firstName`,' ',`c`.`LastName`) AS `customerName`,
+`c`.`clientType` AS `client_type`,`p`.`planName` AS `membership_plan`,`atp`.`feeAmount` AS `fees`,
+`g`.`groupCode` AS `groupCode`,
+format((case when (`atp`.`chargeBackCommision` <> 0) then 0 else 0 end),2) AS `agent_commision`,
+format((case when (`atp`.`ChargeBackInterest` <> 0) then 0 else 0 end),2) AS `agent_interest`,
+
+(case when (`atp`.`newOrRenew` = 0) then 0 else `atp`.`Commission` end) AS `renewal_commision`,
+
+
+format((case when (`atp`.`managerCommission` <> 0) then `atp`.`managerCommission` else 0 end),2) AS `manager_Commision`,
+format((case when (`atp`.`ChargeBackInterestForManager` <> 0) then `atp`.`ChargeBackInterestForManager` else 0 end),2) AS `manager_interest`,
+ 
+format((case when (`atp`.`stateManagerCommission` <> 0) then 0 else 0 end),2) AS `state_manager_commission`,
+format((case when (`atp`.`ChargeBackInterestForStateManager` <> 0) then 0 else 0 end),2) AS `state_manager_interest`,
+format((case when (`atp`.`managerCommission` <> 0) then (case when (`atp`.`ChargeBackInterestForManager` <> 0) then (`atp`.`managerCommission` - `atp`.`ChargeBackInterestForManager`) else `atp`.`managerCommission` end) else `atp`.`Commission` end),2) AS `earned_commission`
+from (((`agentpayment` `atp` left join `customers` `c` on((`atp`.`customerId` = `c`.`customerId`))) 
+left join `plans` `p` on((`p`.`planId` = `atp`.`planId`))) 
+left join `groups` `g` on((`g`.`groupId` = `c`.`groupId`)))
+
+
+
+union all
+
+
+select `atp`.`stateManagerId` AS `statemanagerId`,concat(`c`.`firstName`,' ',`c`.`LastName`) AS `customerName`,
+`c`.`clientType` AS `client_type`,`p`.`planName` AS `membership_plan`,`atp`.`feeAmount` AS `fees`,
+`g`.`groupCode` AS `groupCode`,
+format((case when (`atp`.`chargeBackCommision` <> 0) then 0 else 0 end),2) AS `agent_commision`,
+format((case when (`atp`.`ChargeBackInterest` <> 0) then 0 else 0 end),2) AS `agent_interest`,
+(case when (`atp`.`newOrRenew` = 0) then 0 else `atp`.`Commission` end) AS `renewal_commision`,
+
+format((case when (`atp`.`managerCommission` <> 0) then 0 else 0 end),2) AS `manager_commision`,
+format((case when (`atp`.`ChargeBackInterestForManager` <> 0) then 0 else 0 end),2) AS `manager_interest`,
+
+format((case when (`atp`.`stateManagerCommission` <> 0) then `atp`.`stateManagerCommission` else 0 end),2) AS `state_manager_commission`,
+format((case when (`atp`.`ChargeBackInterestForStateManager` <> 0) then `atp`.`ChargeBackInterestForStateManager` else 0 end),2) AS `state_manager_interest`,
+format((case when (`atp`.`stateManagerCommission` <> 0) then (case when (`atp`.`ChargeBackInterestForStateManager` <> 0) then (`atp`.`stateManagerCommission` - `atp`.`ChargeBackInterestForStateManager`) else `atp`.`stateManagerCommission` end) else `atp`.`Commission` end),2) AS `earned_commission` 
+
+from (((
+    `agentpayment` `atp` 
+    left join `customers` `c` on((`atp`.`customerId` = `c`.`customerId`))) 
+    left join `plans` `p` on((`p`.`planId` = `atp`.`planId`))) 
+    left join `groups` `g` on((`g`.`groupId` = `c`.`groupId`)))
